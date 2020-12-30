@@ -8,7 +8,7 @@ const LoginPage = ({ navigation }) => {
 
 	const login = () => {
 		if (username === 'username' && password === 'password') {
-			navigation.navigate('Home');
+			navigation.navigate('Home'); // loosely equals to something like this.props.history.push('/Home')
 		}
 	};
 
