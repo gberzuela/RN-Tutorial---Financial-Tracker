@@ -15,6 +15,12 @@ const styles = StyleSheet.create({
 		marginVertical: 8,
 		borderRadius: 16,
 	},
+	loginInput: {
+		margin: 20,
+		height: 40,
+		borderColor: 'black',
+		borderWidth: 1,
+	},
 });
 
 export default styles;

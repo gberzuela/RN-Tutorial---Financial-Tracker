@@ -108,9 +108,7 @@ const HomePage = ({ navigation }) => {
 	return (
 		<SafeAreaView>
 			<View>
-				<Text style={styles.titleText}>
-					Hello World. Welcome to a React Native App.
-				</Text>
+				<Text style={styles.titleText}>Welcome to a React Native App.</Text>
 			</View>
 			<Button title="Login" onPress={() => navigation.navigate('Login')} />
 			<View>
