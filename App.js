@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		margin: 20,
-		padding: 20,
 		height: 40,
 		borderColor: 'red',
 		borderWidth: 1,
@@ -34,20 +33,25 @@ const App = () => {
 	const [desc, setDesc] = useState('');
 	const [amount, setAmount] = useState('');
 	const [total, setTotal] = useState(0);
-	const [labels, setLabels] = useState(['Mon', 'Tue', 'Wed', 'Thu']);
 	const [data, setData] = useState([
-		{ [moment()]: 2000 },
-		{ [moment().subtract(1, 'days')]: 2500 },
-		{ [moment().subtract(2, 'days')]: 3500 },
-		{ [moment().subtract(3, 'days')]: 4500 },
-		{ [moment().subtract(4, 'days')]: 5500 },
+		{ date: moment().format('LL'), amount: 2000 },
+		{ date: moment().subtract(1, 'days').format('LL'), amount: 2500 },
+		{ date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(3, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(4, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(5, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(3, 'days').format('LL'), amount: 3500 },
+		{ date: moment().format('LL'), amount: 3500 },
+		{ date: moment().subtract(1, 'days').format('LL'), amount: 3500 },
+		{ date: moment().subtract(2, 'days').format('LL'), amount: 4500 },
+		{ date: moment().subtract(2, 'days').format('LL'), amount: 5500 },
 	]);
+	const [transformedData, setTransformedData] = useState([]);
 	const [gigs, setGigs] = useState([]);
-
-	const dataPoints = {
-		labels,
-		datasets: [{ data }],
-	};
 
 	const chartConfig = {
 		backgroundColor: '#e26a00',
@@ -66,16 +70,54 @@ const App = () => {
 		},
 	};
 
-	// useEffect(() => {
-
-	// }, [gigs])
-
 	useEffect(() => {
 		setTotal(gigs.reduce((result, next) => (result += Number(next.amount)), 0));
 	}, [gigs]);
 
+	useEffect(() => {
+		setTransformedData(transformData(Object.entries(groupBy(data, 'date'))));
+	}, [data]);
+
+	const getDates = () => transformedData.map((entry) => entry.date);
+
+	const getAmounts = () => transformedData.map((entry) => entry.amount);
+
+	const groupBy = (array, key) => {
+		return array.reduce((result, next) => {
+			(result[next[key]] = result[next[key]] || []).push(next);
+			return result;
+		}, {});
+	};
+
+	const transformData = (groupedData) => {
+		let transformedArray = [];
+		groupedData.forEach((pair) => {
+			const total = pair[1].reduce(
+				(result, next) => (result += next.amount),
+				0
+			);
+			transformedArray.push({
+				date: moment(pair[0]).format('MM/DD'),
+				amount: total,
+			});
+		});
+		return transformedArray.sort((a, b) => moment(a.date).diff(moment(b.date)));
+	};
+
+	const dataPoints = {
+		labels: getDates(),
+		datasets: [{ data: getAmounts() }],
+	};
+
 	const addGig = () => {
-		setGigs([...gigs, { desc, amount, timestamp: new Date() }]);
+		setGigs([...gigs, { desc, amount }]);
+		setData([
+			...data,
+			{
+				date: moment().format('LL'),
+				amount: Number(amount),
+			},
+		]);
 		setDesc('');
 		setAmount('');
 	};
@@ -98,7 +140,6 @@ const App = () => {
 					chartConfig={chartConfig}
 					bezier
 					style={styles.chart}
-					verticalLabelRotation={30}
 				/>
 			</View>
 
