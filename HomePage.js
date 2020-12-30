@@ -12,7 +12,7 @@ import { LineChart } from 'react-native-chart-kit';
 import moment from 'moment';
 import styles from './styles';
 
-const HomePage = () => {
+const HomePage = ({ navigation }) => {
 	const [desc, setDesc] = useState('');
 	const [amount, setAmount] = useState('');
 	const [total, setTotal] = useState(0);
@@ -112,6 +112,7 @@ const HomePage = () => {
 					Hello World. Welcome to a React Native App.
 				</Text>
 			</View>
+			<Button title="Login" onPress={() => navigation.navigate('Login')} />
 			<View>
 				<Text>Daily tracker</Text>
 				<LineChart
