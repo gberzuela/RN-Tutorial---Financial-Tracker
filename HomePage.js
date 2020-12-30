@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import {
 	ScrollView,
+	// ^^ div tag that allows users to scroll through that section
 	Text,
+	// ^^ can be treated as a header or paragraph
 	TextInput,
+	// ^^ loosely equals to an input tag
 	Button,
 	View,
+	// ^^ loosely equals to a div tag
 	SafeAreaView,
+	// ^^ Prevents the screen from covering the top menu(s) of an iPhone
+	// ^^ (iOS exclusive)
 	Dimensions,
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import moment from 'moment';
+// ^^ DEPRECATED time package. Look into dayjs
 import styles from './styles';
 
 const HomePage = ({ navigation }) => {
@@ -36,6 +43,7 @@ const HomePage = ({ navigation }) => {
 	const [transformedData, setTransformedData] = useState([]);
 	const [gigs, setGigs] = useState([]);
 
+	// For LineChart
 	const chartConfig = {
 		backgroundColor: '#e26a00',
 		backgroundGradientFrom: '#fb8c00',
@@ -53,10 +61,13 @@ const HomePage = ({ navigation }) => {
 		},
 	};
 
+	/* ---------- HOOKS --------- */
+	// onChange hook for gigs; update the total
 	useEffect(() => {
 		setTotal(gigs.reduce((result, next) => (result += Number(next.amount)), 0));
 	}, [gigs]);
 
+	// onChange hook for data; transform it such we map a total amount to the day
 	useEffect(() => {
 		setTransformedData(transformData(Object.entries(groupBy(data, 'date'))));
 	}, [data]);
@@ -87,6 +98,7 @@ const HomePage = ({ navigation }) => {
 		return transformedArray.sort((a, b) => moment(a.date).diff(moment(b.date)));
 	};
 
+	// For LineChart, needs to be down here because hoisting doesn't work as expected
 	const dataPoints = {
 		labels: getDates(),
 		datasets: [{ data: getAmounts() }],
