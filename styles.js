@@ -1,3 +1,5 @@
+// Having a StyleSheet is important b/c it catches errors
+// Passing a normal style object to a component will run even if there are errors
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
